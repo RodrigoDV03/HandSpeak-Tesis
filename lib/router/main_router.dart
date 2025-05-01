@@ -5,8 +5,13 @@ import 'package:handspeak/screens/screens.dart';
 import 'package:handspeak/data/routes.dart';
 
 final GoRouter mainRouter = GoRouter(
-  initialLocation: AppRoutes.welcome.path,
+  initialLocation: AppRoutes.splash.path,
   routes: [
+    GoRoute(
+      path: AppRoutes.splash.path,
+      name: AppRoutes.splash.name,
+      builder: (context, state) => SplashScreen(), 
+    ),
     GoRoute(
       path: AppRoutes.welcome.path,
       name: AppRoutes.welcome.name,

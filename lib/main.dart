@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:handspeak/router/main_router.dart';
 import 'package:handspeak/theme/light.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
