@@ -9,7 +9,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF66C3E0), // color de fondo celeste
+      backgroundColor: const Color(0xFF66C3E0),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -54,7 +54,7 @@ class WelcomeScreen extends StatelessWidget {
                         context.go(AppRoutes.login.path);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF126E82), // color azul oscuro
+                        backgroundColor: const Color(0xFF126E82),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),

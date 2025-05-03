@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:handspeak/data/colors.dart';
+import 'colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
