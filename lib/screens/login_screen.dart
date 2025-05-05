@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:handspeak/data/routes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,7 +11,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  Future<void> _login() async {
+    setState(() => _isLoading = true);
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // Navegar al dashboard
+      context.go(AppRoutes.dashboard.path);
+    } on FirebaseAuthException catch (e) {
+      String message = 'Ocurrió un error';
+      if (e.code == 'user-not-found') {
+        message = 'Usuario no encontrado';
+      } else if (e.code == 'wrong-password') {
+        message = 'Contraseña incorrecta';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0, left: 16.0),
                   child: GestureDetector(
-                    onTap: () {
-                      context.go(AppRoutes.welcome.path);
-                    },
+                    onTap: () => context.go(AppRoutes.welcome.path),
                     child: const Text(
                       "Volver",
                       style: TextStyle(
@@ -58,6 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text("Correo electrónico:", style: TextStyle(fontWeight: FontWeight.w500)),
                     const SizedBox(height: 8),
                     TextField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color(0xFFF3F3F3),
@@ -68,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text("Contraseña:", style: TextStyle(fontWeight: FontWeight.w500)),
                     const SizedBox(height: 8),
                     TextField(
+                      controller: passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
@@ -90,12 +119,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: double.infinity,
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: _isLoading ? null : _login,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF006B7F),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text("Iniciar sesión", style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text("Iniciar sesión", style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],

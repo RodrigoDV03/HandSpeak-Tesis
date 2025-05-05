@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:handspeak/data/routes.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -10,7 +11,36 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  Future<void> _register() async {
+    setState(() => _isLoading = true);
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      // Navegar al dashboard después del registro
+      context.go(AppRoutes.dashboard.path);
+    } on FirebaseAuthException catch (e) {
+      String message = 'Ocurrió un error';
+      if (e.code == 'email-already-in-use') {
+        message = 'Este correo ya está registrado';
+      } else if (e.code == 'weak-password') {
+        message = 'La contraseña es muy débil';
+      } else if (e.code == 'invalid-email') {
+        message = 'Correo inválido';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +56,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16.0, left: 16.0),
                   child: GestureDetector(
-                    onTap: () {
-                      context.go(AppRoutes.welcome.path);
-                    },
+                    onTap: () => context.go(AppRoutes.welcome.path),
                     child: const Text(
                       "Volver",
                       style: TextStyle(
@@ -55,29 +83,24 @@ class _SigninScreenState extends State<SigninScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Nombres:"),
+                    const Text("Correo electrónico:", style: TextStyle(fontWeight: FontWeight.w500)),
                     const SizedBox(height: 8),
                     TextField(
-                      decoration: _inputDecoration(),
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color(0xFFF3F3F3),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    const Text("Apellidos:"),
+                    const Text("Contraseña:", style: TextStyle(fontWeight: FontWeight.w500)),
                     const SizedBox(height: 8),
                     TextField(
-                      decoration: _inputDecoration(),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text("Correo electrónico:"),
-                    const SizedBox(height: 8),
-                    TextField(
-                      decoration: _inputDecoration(),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text("Contraseña:"),
-                    const SizedBox(height: 8),
-                    TextField(
+                      controller: passwordController,
                       obscureText: _obscurePassword,
-                      decoration: _inputDecoration().copyWith(
+                      decoration: InputDecoration(
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -88,6 +111,9 @@ class _SigninScreenState extends State<SigninScreen> {
                             });
                           },
                         ),
+                        filled: true,
+                        fillColor: const Color(0xFFF3F3F3),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -95,28 +121,28 @@ class _SigninScreenState extends State<SigninScreen> {
                       width: double.infinity,
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: () {
-                          // Acción al registrarse
-                        },
+                        onPressed: _isLoading ? null : _register,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF006B7F),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: const Text("Registrarse", style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text("Registrarse", style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("¿Ya tienes una cuenta? "),
+                  const Text("¿Ya tienes cuenta? "),
                   GestureDetector(
                     onTap: () => context.go(AppRoutes.login.path),
                     child: const Text(
-                      "Iniciar sesión",
+                      "Inicia sesión",
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontWeight: FontWeight.bold,
@@ -129,17 +155,6 @@ class _SigninScreenState extends State<SigninScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  InputDecoration _inputDecoration() {
-    return InputDecoration(
-      filled: true,
-      fillColor: const Color(0xFFF3F3F3),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
       ),
     );
   }
