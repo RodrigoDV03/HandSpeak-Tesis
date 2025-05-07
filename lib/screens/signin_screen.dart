@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:handspeak/data/colors.dart';
 import 'package:handspeak/data/routes.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -53,7 +54,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     },
                     child: const Text(
                       "Ir al inicio",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: AppColor.onPrimary, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -89,11 +90,11 @@ class _SigninScreenState extends State<SigninScreen> {
       setState(() => _isLoading = false);
     }
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF61C4D9),
+      backgroundColor: AppColor.primary,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
@@ -106,7 +107,7 @@ class _SigninScreenState extends State<SigninScreen> {
                   child: const Text(
                     "← Volver",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: AppColor.text,
                       fontSize: 14,
                     ),
                   ),
@@ -124,7 +125,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColor.onPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -137,7 +138,7 @@ class _SigninScreenState extends State<SigninScreen> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColor.onPrimary,
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
@@ -194,12 +195,12 @@ class _SigninScreenState extends State<SigninScreen> {
                       child: ElevatedButton(
                         onPressed: _isLoading ? null : _register,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF003366),
+                          backgroundColor: AppColor.accent,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
-                            : const Text("Registrarse", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                            ? const CircularProgressIndicator(color: AppColor.onPrimary)
+                            : const Text("Registrarse", style: TextStyle(fontWeight: FontWeight.bold, color: AppColor.onPrimary)),
                       ),
                     ),
                   ],

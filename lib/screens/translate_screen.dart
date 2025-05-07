@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:handspeak/data/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TranslateScreen extends StatefulWidget {
@@ -67,7 +68,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF67C9E4), // Fondo celeste
+      backgroundColor: AppColor.primary, // Fondo celeste
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +88,6 @@ class _TranslateScreenState extends State<TranslateScreen> {
               ),
             ),
 
-            // Vista previa de la cámara o botón para iniciar
             Center(
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -112,14 +112,11 @@ class _TranslateScreenState extends State<TranslateScreen> {
               ),
             ),
 
-            // Texto traducido
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                _translatedText.isEmpty
-                    ? 'Transcripción en texto, transcripción en texto'
-                    : _translatedText,
-                style: const TextStyle(color: Colors.black, fontSize: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: const Text(
+                'Traducción en texto',
+                style: TextStyle(color: Colors.black, fontSize: 18),
                 textAlign: TextAlign.center,
               ),
             ),

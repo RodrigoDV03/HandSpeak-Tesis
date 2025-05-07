@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:handspeak/data/colors.dart';
 import 'package:handspeak/data/routes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -53,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: const Text(
                     "Continuar",
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: AppColor.onPrimary, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -91,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF61C4D9),
+      backgroundColor: AppColor.primary,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -124,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppColor.onPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -137,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColor.onPrimary,
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: Column(
@@ -195,12 +196,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? const CircularProgressIndicator(color: AppColor.onPrimary)
                             : const Text(
                                 "Iniciar sesión",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white
+                                  color: AppColor.onPrimary
                                   ),
                               ),
                       ),
@@ -211,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 32),
               // const Text(
               //   "O continúa con",
-              //   style: TextStyle(color: Colors.white70),
+              //   style: TextStyle(color: AppColor.onPrimary70),
               // ),
               // const SizedBox(height: 16),
               // Row(
@@ -228,13 +229,13 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("¿No tienes cuenta? ", style: TextStyle(color: Colors.white)),
+                  const Text("¿No tienes cuenta? ", style: TextStyle(color: AppColor.onPrimary)),
                   GestureDetector(
                     onTap: () => context.go(AppRoutes.signin.path),
                     child: const Text(
                       "Registrarse",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColor.onPrimary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -256,7 +257,7 @@ class _SocialIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.onPrimary,
       radius: 20,
       child: Icon(icon, size: 26, color: Colors.black),
     );
