@@ -7,7 +7,7 @@ class DashboardLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Dashboard')),
+      appBar: AppBar(title: Text('Handspeak')),
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         items: const [
