@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:handspeak/data/colors.dart';
 import 'package:handspeak/data/routes.dart';
 
@@ -12,10 +13,18 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+
+  final List<String> avatarList = [
+    'assets/images/avatars/avatar1.png',
+    'assets/images/avatars/avatar2.png',
+  ];
+
+  String selectedAvatar = 'assets/images/avatars/avatar1.png';
 
   void _showSuccessDialog() {
     showDialog(
@@ -69,11 +78,16 @@ class _SigninScreenState extends State<SigninScreen> {
   Future<void> _register() async {
     setState(() => _isLoading = true);
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      _showSuccessDialog();
+
+      final user = userCredential.user;
+      if (user != null) {
+        await _saveUserData(user); // 👉 Guarda los datos en Firestore
+        _showSuccessDialog();
+      }
     } on FirebaseAuthException catch (e) {
       String message = 'Ocurrió un error';
       if (e.code == 'email-already-in-use') {
@@ -90,7 +104,19 @@ class _SigninScreenState extends State<SigninScreen> {
       setState(() => _isLoading = false);
     }
   }
- 
+
+  Future<void> _saveUserData(User user) async {
+    final firestore = FirebaseFirestore.instance;
+
+    await firestore.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'name': nameController.text.trim(),
+      'email': user.email,
+      'avatar': selectedAvatar, // Ruta del avatar seleccionado
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,6 +177,20 @@ class _SigninScreenState extends State<SigninScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Text("Nombre"),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: const Color(0xFFF3F3F3),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     const Text("Correo electrónico"),
                     const SizedBox(height: 8),
                     TextField(
@@ -187,6 +227,47 @@ class _SigninScreenState extends State<SigninScreen> {
                           borderSide: BorderSide.none,
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("Selecciona tu avatar"),
+                    const SizedBox(height: 8),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: avatarList.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        final avatar = avatarList[index];
+                        final isSelected = selectedAvatar == avatar;
+
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedAvatar = avatar;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: isSelected ? AppColor.accent : Colors.transparent,
+                                width: 3,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(avatar),
+                              radius: 36,
+                              backgroundColor: Colors.transparent,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
                     SizedBox(

@@ -49,11 +49,6 @@ final GoRouter mainRouter = GoRouter(
           builder: (context, state) => LearnScreen(),
         ),
         GoRoute(
-          path: AppRoutes.dashboard.store.path,
-          name: AppRoutes.dashboard.store.name,
-          builder: (context, state) => StoreScreen(),
-        ),
-        GoRoute(
           path: AppRoutes.dashboard.profile.path,
           name: AppRoutes.dashboard.profile.name,
           builder: (context, state) => ProfileScreen(),

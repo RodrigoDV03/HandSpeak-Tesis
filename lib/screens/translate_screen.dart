@@ -91,7 +91,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
             Center(
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                width: MediaQuery.of(context).size.width * 0.9,
+                width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.5,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
@@ -116,7 +116,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: const Text(
                 'Traducción en texto',
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                style: TextStyle(color: Colors.black, fontSize: 12),
                 textAlign: TextAlign.center,
               ),
             ),
