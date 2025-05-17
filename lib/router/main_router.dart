@@ -53,6 +53,11 @@ final GoRouter mainRouter = GoRouter(
           name: AppRoutes.dashboard.profile.name,
           builder: (context, state) => ProfileScreen(),
         ),
+        GoRoute(
+          path: AppRoutes.dashboard.camera.path,
+          name: AppRoutes.dashboard.camera.name,
+          builder: (context, state) => CameraScreen(),
+        ),
       ],
     ),
   ],

@@ -22,6 +22,8 @@ dependencies:
   firebase_core: ^3.13.0
   firebase_auth: ^5.5.3
   cloud_firestore: ^5.6.7
+  image_picker: ^0.8.7
+  firebase_storage: ^12.4.5
   google_sign_in: ^6.2.0
   camera: ^0.11.1
 
@@ -42,6 +44,9 @@ flutter:
     - assets/images/google.png
     - assets/images/avatars/avatar1.png
     - assets/images/avatars/avatar2.png
+    - assets/images/history_icon.png
+    - assets/images/camera_icon.png
+    - assets/images/translate_girl.png
     - assets/fonts/
   fonts:
     - family: Poppins

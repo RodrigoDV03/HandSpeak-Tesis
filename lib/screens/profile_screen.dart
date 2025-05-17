@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,7 +16,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController aboutController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
-  String avatarUrl = 'assets/images/avatars/avatar1.png'; // ruta local inicial
+
+  String avatarUrl = 'assets/images/avatars/avatar1.png';
+
+  final List<String> avatarOptions = [
+    'assets/images/avatars/avatar1.png',
+    'assets/images/avatars/avatar2.png',
+  ];
+
   bool isLoading = false;
 
   @override
@@ -59,10 +68,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void selectAvatar() {
-    // En desarrollo: puedes mostrar un modal con opciones
-    setState(() {
-      avatarUrl = 'assets/images/avatars/avatar2.png'; // ejemplo de cambio local
-    });
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          height: 200,
+          child: GridView.builder(
+            itemCount: avatarOptions.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+            ),
+            itemBuilder: (_, index) {
+              final path = avatarOptions[index];
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    avatarUrl = path;
+                  });
+                  Navigator.pop(context); // Cierra el modal
+                },
+                child: CircleAvatar(
+                  backgroundImage: AssetImage(path),
+                  radius: 30,
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -80,7 +120,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       CircleAvatar(
                         radius: 50,
-                        backgroundImage: AssetImage(avatarUrl),
+                        backgroundImage: avatarUrl.startsWith('http')
+                            ? NetworkImage(avatarUrl)
+                            : AssetImage(avatarUrl) as ImageProvider,
                         backgroundColor: Colors.transparent,
                       ),
                       IconButton(
